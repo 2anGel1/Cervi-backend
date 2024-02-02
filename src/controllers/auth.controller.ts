@@ -180,7 +180,7 @@ export const accountVerification = async (req: Request, res: Response) => {
         },
       });
 
-      return errorResponse({ res, message: "Error on Code" });
+      return errorResponse({ res, message: "Code incorrect" });
     }
 
     await prisma.accountVerification.update({
@@ -221,13 +221,13 @@ export const accountVerification = async (req: Request, res: Response) => {
       });
     }
 
-    // const sessionId = await createSession(accountVerification.userId);
+    const sessionId = await createSession(accountVerification.userId);
 
-    // res.clearCookie(accountVerificationCookie.name);
+    res.clearCookie(accountVerificationCookie.name);
 
-    // res.cookie(sessionIdCookie.name, sessionId, sessionIdCookie.options);
+    res.cookie(sessionIdCookie.name, sessionId, sessionIdCookie.options);
 
-    return successResponse({ res, message: "Inscription réussie" });
+    return successResponse({ res, message: "Code vérifié, inscription terminée" });
 
   } catch (error: any) {
     return handleError({ res, error });
@@ -249,7 +249,7 @@ export const passwordReset = async (req: Request, res: Response) => {
     });
 
     if (user === null) {
-      throw Error("L'adresse mail ne correspond à aucun utilisateur");
+      return errorResponse({ res, message: "L'adresse mail ne correspond à aucun utilisateur" });
     }
     const plainCode = generateRandomCode();
     const hashedCode = hash(plainCode);
@@ -273,7 +273,7 @@ export const passwordReset = async (req: Request, res: Response) => {
     });
     res.cookie(passwordResetCookie.name, passwordResetToken, passwordResetCookie.options);
 
-    return successResponse({ res, message: "Un code de rénitialisation a été envoyé par e-maile" });
+    return successResponse({ res, message: "Un code de réinitialisation a été envoyé par e-mail" });
 
   } catch (error: any) {
 
@@ -301,11 +301,11 @@ export const verificationForPasswordReset = async (req: Request, res: Response) 
     });
 
     if (!passwordReset) {
-      throw new Error("Not found");
+      return errorResponse({ res, message: "Not found" });
     }
 
     if (passwordReset.codeVerified) {
-      throw new Error("Déjà vérifié");
+      return errorResponse({ res, message: "Déjà vérifié" });
     }
 
     if (passwordReset.attempt === 5) {
