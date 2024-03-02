@@ -9,6 +9,9 @@ import express from "express";
 const cors = require("cors");
 import ms from "ms";
 
+const swaggerDocument = require('../swagger-docs.json');
+const swaggerUi = require('swagger-ui-express');
+
 declare module "express" {
   interface Request {
     session: Session & { [key: string]: any };
@@ -43,5 +46,7 @@ app.use(basePath + "/entreprise", entrepriseRoute);
 app.use(basePath + "/candidat", candidatRoute);
 app.use(basePath + "/auth", authRoute);
 app.use(basePath + "/user", userRoute);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 export { app };

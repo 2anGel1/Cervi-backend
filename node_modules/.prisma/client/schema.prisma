@@ -1,0 +1,202 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Account {
+  id            String  @id @default(cuid())
+  userId        Int
+  type          String
+  refresh_token String? @db.Text
+  access_token  String? @db.Text
+  expires_at    Int?
+  token_type    String?
+  scope         String?
+  id_token      String? @db.Text
+  session_state String?
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AccountVerification {
+  id          Int       @id @default(autoincrement())
+  accountType String    @default("CANDIDAT")
+  verifiedAt  DateTime?
+  createdAt   DateTime
+  verified    Boolean
+  ip          String?
+  firstName   String?
+  lastName    String?
+  code        String
+  userName    String
+  password    String
+  attempt     Int?
+  userId      Int
+}
+
+model PasswordReset {
+  id             Int       @id @default(autoincrement())
+  userId         Int
+  code           String
+  attempt        Int
+  ip             String
+  createdAt      DateTime?
+  codeVerified   Boolean   @default(false)
+  codeVerifiedAt DateTime?
+  reset          Boolean   @default(false)
+  resetAt        DateTime?
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+  active       Boolean  @default(true)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id           Int          @id @default(autoincrement())
+  firstName    String?
+  lastName     String?
+  email        String?      @unique
+  userName     String?      @unique
+  phoneNumber  String?
+  passwordHash String?
+  active       Boolean?
+  createdAt    DateTime?
+  verifiedAt   DateTime?
+  signupMethod String?
+  image        String?
+  entreprise   Entreprise[]
+  candidat     Candidat[]
+  accounts     Account[]
+  sessions     Session[]
+}
+
+model Candidat {
+  idCandidat          Int         @id @default(autoincrement())
+  user                User        @relation(fields: [userId], references: [id])
+  entretiens          Entretien[]
+  adresCandidat       String?
+  experienceCandidat  String?
+  nivEtudesCandidat   String?
+  competencesCandidat String?
+  cVCandidat          String?
+  notes               Note[]
+  userId              Int
+}
+
+model Contrat {
+  idContrat        Int        @id @default(autoincrement())
+  entreprise       Entreprise @relation(fields: [entrepriseId], references: [idEntreprise])
+  freelancer       Freelancer @relation(fields: [freelancerId], references: [idFreelancer])
+  entrepriseId     Int
+  freelancerId     Int
+  titreProjContrat String
+  datDebConrat     DateTime
+  datFinConrat     DateTime
+  coutContrat      Int
+  descripContrat   String
+  statutContrat    String
+}
+
+model Entreprise {
+  idEntreprise        Int           @id @default(autoincrement())
+  user                User          @relation(fields: [userId], references: [id])
+  offreEmplois        OffreEmploi[]
+  entretiens          Entretien[]
+  contrats            Contrat[]
+  projets             Projet[]
+  nomEntreprise       String?
+  adresEntreprise     String?
+  contactEntreprise   String?
+  sectActivEntreprise String?
+  tailleEntreprise    String?
+  logoEntreprise      String?
+  descripEntreprise   String?
+  siteWebEntreprise   String?
+  notes               Note[]
+  userId              Int
+}
+
+model Entretien {
+  idEntretien       Int        @id @default(autoincrement())
+  entreprise        Entreprise @relation(fields: [entrepriseId], references: [idEntreprise])
+  candidat          Candidat   @relation(fields: [candidatId], references: [idCandidat])
+  entrepriseId      Int
+  candidatId        Int
+  dateEntretien     DateTime
+  adresEntretien    String
+  recruEntretien    String
+  typeEntretien     String
+  descripEntreprise String
+}
+
+model Freelancer {
+  idFreelancer          Int           @id @default(autoincrement())
+  propositions          Proposition[]
+  contrats              Contrat[]
+  nomFreelancer         String
+  prenomFreelancer      String
+  adresFreelancer       String
+  TelFreelancer         String
+  emailFreelancer       String
+  competencesFreelancer String
+  experienceFreelancer  String
+  portfolioFreelancer   String
+}
+
+model Note {
+  idNote       Int        @id @default(autoincrement())
+  entreprise   Entreprise @relation(fields: [entrepriseId], references: [idEntreprise])
+  candidat     Candidat   @relation(fields: [candidatId], references: [idCandidat])
+  entrepriseId Int
+  candidatId   Int
+  Note         Decimal
+  commentNote  String
+  dateNote     DateTime
+}
+
+model OffreEmploi {
+  idOffreEmploi          Int        @id @default(autoincrement())
+  entreprise             Entreprise @relation(fields: [entrepriseId], references: [idEntreprise])
+  entrepriseId           Int
+  titreOffreEmploi       String
+  descripOffreEmploi     String
+  localiOffreEmploi      String
+  datePubliOffreEmploi   DateTime
+  datelimitOffreEmploi   DateTime
+  salaireOffreEmploi     Int
+  typeContOffreEmploi    String
+  experienceOffreEmploi  String
+  nivEtuOffreEmploi      String
+  competencesOffreEmploi String
+}
+
+model Projet {
+  idProjet      Int           @id @default(autoincrement())
+  entreprise    Entreprise    @relation(fields: [entrepriseId], references: [idEntreprise])
+  propositions  Proposition[]
+  entrepriseId  Int
+  titreProjet   String
+  descripProjet String
+  BudgetProjet  Int
+  DelaiProjet   Int
+}
+
+model Proposition {
+  idProposition         Int        @id @default(autoincrement())
+  projets               Projet     @relation(fields: [projetId], references: [idProjet])
+  freelancer            Freelancer @relation(fields: [freelancerId], references: [idFreelancer])
+  projetId              Int
+  freelancerId          Int
+  delaiProposition      Int
+  descripProposition    String
+  coutProposition       Int
+  competenceProposition String
+}
