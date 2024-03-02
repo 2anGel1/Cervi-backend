@@ -25,6 +25,7 @@
         "tags": [
           "Authentification"
         ],
+        "description": "création de compte",
         "operationId": "signupId",
         "requestBody": {
           "description": "Corps de la requête",
@@ -68,6 +69,320 @@
                     "message": {
                       "type": "string",
                       "example": "message d'erreur"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "echec de la requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Erreur interne au serveur"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authentification"
+        ],
+        "description": "connexion",
+        "operationId": "loginId",
+        "requestBody": {
+          "description": "Corps de la requête",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "angemmanuel@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "000000"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "angemmanuel@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "000000"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "succès de la requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Connexion réussie"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "echec de la requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "message d'erreur"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "echec de la requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Erreur interne au serveur"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/account-verification": {
+      "post": {
+        "tags": [
+          "Authentification"
+        ],
+        "description": "véficiation de compte",
+        "operationId": "account-verificationId",
+        "requestBody": {
+          "description": "Corps de la requête",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "1234"
+                  }
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "exemple": "1234"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "succès de la requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Code vérifié, inscription terminée"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "echec de la requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "message d'erreur"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "echec de la requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Erreur interne au serveur"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "tags": [
+          "Authentification"
+        ],
+        "description": "déconnexion",
+        "operationId": "logoutId",
+        "responses": {
+          "200": {
+            "description": "succès de la requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Déconnexion réussie"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "echec de la requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "echec de la requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Erreur interne au serveur"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "get": {
+        "tags": [
+          "Authentification"
+        ],
+        "description": "connexion avec google",
+        "operationId": "googleId",
+        "responses": {
+          "200": {
+            "description": "succès de la requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Connexion réussie"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "echec de la requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "message d'erreur"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "echec de la requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
                     }
                   }
                 }
